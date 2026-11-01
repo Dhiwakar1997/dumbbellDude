@@ -101,3 +101,7 @@ touched. The file input is reset so another file can be picked.
 showed the lifter tapping the Settings row instead of the dialog. That step was corrected and the whole script sent
 again (attempt 2). Attempt 2 was also accepted with nothing marked, and it is the version saved here.
 **Draft playback id:** `draft-64e89681-5a24-429e-8844-1a5a580de956`. No saved flow id was returned.
+
+## Animations
+
+Recordings of each flow playing in the Trussel IDE (GIF and MP4) are in [docs/evidence/eda/](../evidence/eda/README.md).
