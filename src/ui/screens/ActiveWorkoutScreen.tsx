@@ -35,7 +35,7 @@ function nextUp(workout: Workout): string {
 // S-7WGZZXGG5G finish confirm and S-ZYJ11ET1CP discard confirm.
 // trussel: T-JF27E1HQ7C@1
 export function ActiveWorkoutScreen(): JSX.Element {
-  const { workouts, settings, refresh } = useServices();
+  const { workouts, settings, exercises, refresh } = useServices();
   const navigate = useNavigate();
   const [workout, setWorkout] = useState<Workout | null>(() => workouts.getActive());
   const [drafts, setDrafts] = useState<Record<string, string>>({});
@@ -138,9 +138,11 @@ export function ActiveWorkoutScreen(): JSX.Element {
         )}
         {workout.exercises.map((block) => {
           const previous = workouts.previousSets(block.exerciseId);
+          const equipment = exercises.getExercise(block.exerciseId)?.equipment;
+          const muscle = capitalize(block.muscleGroup) + (equipment ? ` · ${capitalize(equipment)}` : '');
           return (
             <div key={block.id}>
-              <ExerciseBlockHeader name={block.exerciseName} muscle={capitalize(block.muscleGroup)} unitLabel={units} />
+              <ExerciseBlockHeader name={block.exerciseName} muscle={muscle} unitLabel={units} />
               {block.sets.map((s, i) => {
                 const prev = previous[i];
                 return (
@@ -196,7 +198,7 @@ export function ActiveWorkoutScreen(): JSX.Element {
         open={modal === 'discard'}
         danger
         title="Discard this workout?"
-        message={`${formatMinutes(workoutDurationMinutes(workout, new Date(now)))} of gains, gone. This can't be undone.`}
+        message={`${workoutDurationMinutes(workout, new Date(now))} minutes of gains, gone. This can't be undone.`}
         confirmLabel="Discard"
         cancelLabel="Keep it"
         onConfirm={discard}

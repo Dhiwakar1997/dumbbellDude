@@ -16,6 +16,8 @@ describe('ActiveWorkoutScreen', () => {
   it('renders the exercise card, timer bar and one set row', () => {
     setup();
     expect(screen.getByText('Bench Press')).toBeInTheDocument();
+    expect(screen.getByText('Chest · Barbell')).toBeInTheDocument(); // design copy C-CEJYG76YXT
+    expect(screen.getByText('Weight')).toBeInTheDocument();
     expect(screen.getByRole('timer', { name: 'Elapsed time' })).toHaveTextContent(/\d\d:\d\d:\d\d/);
     expect(screen.getAllByTestId('set-row')).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Finish workout' })).toBeInTheDocument();

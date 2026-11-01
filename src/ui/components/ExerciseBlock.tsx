@@ -13,7 +13,7 @@ export function ExerciseBlockHeader(props: { name: string; muscle: string; unitL
       <div className="exblock-cols" aria-hidden="true">
         <span>Set</span>
         <span>Previous</span>
-        <span>{props.unitLabel}</span>
+        <span title={`Weight in ${props.unitLabel}`}>Weight</span>
         <span>Reps</span>
         <span>Done</span>
       </div>

@@ -61,7 +61,8 @@ export function ProgressScreen(): JSX.Element {
   }
 
   const series = progress.seriesFor(selected.id).map((p) => ({ date: p.date, value: toDisplayWeight(p.oneRepMaxKg, units) }));
-  const records = progress.recordsFor(selected.id);
+  // The design (S-XJ9Y32E8SM) lists three PR kinds; best set volume is kept in the domain but not shown here.
+  const records = progress.recordsFor(selected.id).filter((r) => r.kind !== 'bestSetVolume');
   const first = series[0];
   const last = series[series.length - 1];
 
