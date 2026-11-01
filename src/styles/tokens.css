@@ -1,0 +1,42 @@
+/* Design tokens from Trussel design set D-ZWEKZCRHB5 "Dumbbell Dude App" (v178 style guide). */
+:root {
+  --vd-background: #0e0f12;
+  --vd-surface: #1a1c21;
+  --vd-raised: #25282f;
+  --vd-border: #2f333b;
+  --vd-foreground: #f4f5f7;
+  --vd-muted: #9aa0ab;
+  --vd-accent: #c6ff3d;
+  --vd-on-accent: #0e0f12;
+  --vd-accent-soft: rgba(198, 255, 61, 0.14);
+  --vd-success: #34d399;
+  --vd-success-soft: rgba(52, 211, 153, 0.16);
+  --vd-danger: #ff5c5c;
+  --vd-danger-soft: rgba(255, 92, 92, 0.16);
+  --vd-scrim: rgba(0, 0, 0, 0.72);
+
+  --vd-space-1: 4px;
+  --vd-space-2: 8px;
+  --vd-space-3: 12px;
+  --vd-space-4: 16px;
+  --vd-space-5: 24px;
+  --vd-space-6: 32px;
+
+  --vd-font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --vd-text-small: 12px;
+  --vd-text: 15px;
+  --vd-text-large: 20px;
+  --vd-text-number: 24px;
+  --vd-text-title: 28px;
+  --vd-text-display: 44px;
+  --vd-leading: 1.4;
+
+  --vd-radius-sm: 8px;
+  --vd-radius: 14px;
+  --vd-radius-lg: 22px;
+  --vd-radius-pill: 999px;
+
+  --vd-tap: 48px;
+  --vd-tap-lg: 56px;
+  --vd-tabbar-height: 68px;
+}
