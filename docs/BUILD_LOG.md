@@ -8,7 +8,50 @@ Times in IST (Asia/Kolkata).
   199 nodes, 253 edges, 0 violations).
 - **Run 3 (2026-11-01): Phase 4 + Phase 5 — DONE** (one open item: 15 "cross-slice" findings, see Blocked).
   199/199 nodes implemented, 98/98 tests, build + tsc green.
-- Next run: **Phase 6 — Netlify ready** (build, confirm dist + SPA redirect, rewrite README, commit).
+- **Run 4 (2026-11-01): Phase 6 — DONE.** Build green, dist/ + SPA redirect confirmed, README rewritten,
+  docs/evidence/ placeholder added. Nothing deployed (no `netlify` or `git push` run, per the rules).
+
+## Run 4 — Phase 6 (2026-11-01)
+- `get_context`: local sandbox, branch `claude/github-repo-creation-2dngb5`, session on default pass P-2 (P-3 fully
+  implemented; analysis fresh, not stale).
+- `npm run build` ✓ — dist/index.html 0.62 kB, assets/index-*.css 29.54 kB, assets/index-*.js 227.21 kB
+  (72.29 kB gz); dist/ contains index.html, favicon.svg, assets/. `netlify.toml`: `command = "npm run build"`,
+  `publish = "dist"`, `[[redirects]] from "/*" to "/index.html" status 200`. `vitest run` 98/98 ✓.
+- README.md rewritten: what the app is, how it was built with Trussel (design set D-ZWEKZCRHB5 v178, pass
+  "Dumbbell Dude v1" P-3 with 199 nodes / 253 edges), layout, run/test/build, Netlify deploy (connect repo with
+  `npm run build` → `dist`, or `netlify deploy --prod --dir dist`), and an **Evidence** placeholder pointing to
+  docs/evidence/ (folder created with a README listing the screenshots to add).
+
+## How Trussel helped — final summary (whole build)
+- **Design system first, enforced.** The design set's tokens-only validation and the `--vd-*` style guide meant
+  the 33 components and the code's `tokens.css`/`components.css` share exact values; the app's CSS was ported
+  1:1 from the design components, keeping their class names.
+- **`snapshot_screen` caught real UI bugs before any code**: the Finish button overflowing the 844 px frame,
+  clipped routine lists, a 2.77:1 contrast danger button, and a modal overflowing its frame. All were fixed in
+  the design.
+- **Architecture vocabulary from the real repo.** `request_analysis` on the bare scaffold gave the detected
+  component-based columns, so all 199 nodes were placed in real columns up front, and the committed design
+  showed 0 violations for 253 edges.
+- **Design notes as an implementation contract.** Every UI node named its `S-…`/`C-…` IDs and states, and every
+  service its rules and edge cases. Implementation was mostly transcription, and the notes became the test cases
+  (e.g. "Reps must be at least 1. Nice try.", zero-weight sets, import validation).
+- **Stamps made "done" checkable.** 199 `// trussel: <ID>@1` stamps; `get_node` shows `stamp_found_at` (file
+  and line) per node, and `get_architecture view=incoming` answered "is anything unbuilt?" in one call (0).
+- **Analysis found layering bugs that tests and tsc could not**: a leftward type import (ServicesContext →
+  container) and an undeclared helper module that landed in the wrong column. Both were fixed and confirmed on
+  re-analysis.
+- **Design-vs-code review was concrete**: rereading C-CEJYG76YXT and snapshotting S-XJ9Y32E8SM exposed three
+  copy mismatches and an extra PR row, fixed in `0ab1d42`.
+- **Friction: volume and granularity.** No bulk create: about 45 calls to wire tab links, and about 450
+  `propose_node`/`propose_edge` calls for the architecture. Children are per component (not per placement),
+  which forced flattened cards; functions need a module parent node; `get_pass` reached 76 KB.
+- **Friction: noisy or inconsistent signals.** `possible_duplicates` is name-only and flagged every sibling
+  (kgToLb vs lbToKg). The layout report false-flags bottom-pinned elements. 15 "cross-slice" violations remain
+  that `explain_connection` itself reports as non-violations (see Blocked). `get_architecture` can't show
+  uncommitted nodes, so flow can only be checked after commit.
+- **Friction: session state and conventions.** After full implementation the session silently rebound to the
+  default pass P-2, so `get_pass` no longer showed P-3. The brief's watermark/body-hash convention does not
+  exist in the server's stamp rule, so none was added.
 
 ## Run 1 — Phase 0 + Phase 1 (2026-11-01)
 
