@@ -1,7 +1,22 @@
 // trussel: T-0D6J6JWTRC@1
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { Services } from './container';
+import type { DataTransferService } from '../application/DataTransferService';
+import type { ExerciseService } from '../application/ExerciseService';
+import type { ProgressService } from '../application/ProgressService';
+import type { RoutineService } from '../application/RoutineService';
+import type { SettingsService } from '../application/SettingsService';
+import type { WorkoutService } from '../application/WorkoutService';
+
+/** The wired use-case services handed to screens (built by createServices in container.ts). */
+export interface Services {
+  workouts: WorkoutService;
+  routines: RoutineService;
+  exercises: ExerciseService;
+  progress: ProgressService;
+  settings: SettingsService;
+  dataTransfer: DataTransferService;
+}
 
 type ServicesValue = Services & { refresh: () => void; version: number };
 

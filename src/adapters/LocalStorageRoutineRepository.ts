@@ -1,10 +1,21 @@
 // trussel: T-7KJVT27YYS@1
 import type { Routine } from '../domain/model';
 import type { RoutineRepository } from '../application/ports';
-import { isRoutineArray } from './guards';
 import { LocalStorageStore } from './storage';
 
 const ROUTINES = 'routines';
+
+
+// Shape guard(s) for data read back from storage; anything failing is treated as absent.
+type Rec = Record<string, unknown>;
+const isObj = (x: unknown): x is Rec => typeof x === 'object' && x !== null && !Array.isArray(x);
+const isStr = (x: unknown): x is string => typeof x === 'string';
+function isRoutineArray(x: unknown): x is Routine[] {
+  return (
+    Array.isArray(x) &&
+    x.every((r) => isObj(r) && isStr(r.id) && isStr(r.name) && Array.isArray(r.exercises))
+  );
+}
 
 // trussel: T-151H7JE8N7@1
 export class LocalStorageRoutineRepository implements RoutineRepository {

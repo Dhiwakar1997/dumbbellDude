@@ -1,11 +1,19 @@
 // trussel: T-WH7R0WMPZY@1
 import type { Exercise } from '../domain/model';
 import type { ExerciseRepository } from '../application/ports';
-import { isExerciseArray } from './guards';
 import { seedExercises } from './seedExercises';
 import { LocalStorageStore } from './storage';
 
 const CUSTOM = 'customExercises';
+
+
+// Shape guard(s) for data read back from storage; anything failing is treated as absent.
+type Rec = Record<string, unknown>;
+const isObj = (x: unknown): x is Rec => typeof x === 'object' && x !== null && !Array.isArray(x);
+const isStr = (x: unknown): x is string => typeof x === 'string';
+function isExerciseArray(x: unknown): x is Exercise[] {
+  return Array.isArray(x) && x.every((e) => isObj(e) && isStr(e.id) && isStr(e.name) && isStr(e.muscleGroup));
+}
 
 // trussel: T-QFW2Q4HMKV@1
 export class LocalStorageExerciseRepository implements ExerciseRepository {

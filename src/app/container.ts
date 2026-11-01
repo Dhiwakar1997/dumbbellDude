@@ -14,15 +14,9 @@ import { ProgressService } from '../application/ProgressService';
 import { RoutineService } from '../application/RoutineService';
 import { SettingsService } from '../application/SettingsService';
 import { WorkoutService } from '../application/WorkoutService';
+import type { Services } from './ServicesContext';
 
-export interface Services {
-  workouts: WorkoutService;
-  routines: RoutineService;
-  exercises: ExerciseService;
-  progress: ProgressService;
-  settings: SettingsService;
-  dataTransfer: DataTransferService;
-}
+export type { Services } from './ServicesContext';
 
 // trussel: T-D66YY49PVF@1
 export function createServices(options: { storage?: KeyValueStorage; clock?: Clock; ids?: IdGenerator } = {}): Services {

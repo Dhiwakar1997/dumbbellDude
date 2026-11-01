@@ -2,10 +2,17 @@
 import { DEFAULT_SETTINGS } from '../domain/model';
 import type { Settings } from '../domain/model';
 import type { SettingsRepository } from '../application/ports';
-import { isRecord } from './guards';
 import { LocalStorageStore } from './storage';
 
 const SETTINGS = 'settings';
+
+
+// Shape guard(s) for data read back from storage; anything failing is treated as absent.
+type Rec = Record<string, unknown>;
+const isObj = (x: unknown): x is Rec => typeof x === 'object' && x !== null && !Array.isArray(x);
+function isRecord(x: unknown): x is Rec {
+  return isObj(x);
+}
 
 // trussel: T-3PGZDK46XR@1
 export class LocalStorageSettingsRepository implements SettingsRepository {

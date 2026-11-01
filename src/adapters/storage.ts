@@ -29,18 +29,22 @@ export class MemoryStorage implements KeyValueStorage {
   }
 }
 
-function defaultStorage(): KeyValueStorage {
-  try {
-    if (typeof globalThis.localStorage !== 'undefined') return globalThis.localStorage;
-  } catch {
-    // Access can throw in privacy modes; fall back to memory.
-  }
-  return new MemoryStorage();
-}
-
 // trussel: T-TARHR5WN3J@1
 export class LocalStorageStore {
-  constructor(private readonly storage: KeyValueStorage = defaultStorage()) {}
+  private readonly storage: KeyValueStorage;
+
+  constructor(storage?: KeyValueStorage) {
+    this.storage = storage ?? LocalStorageStore.browserStorage();
+  }
+
+  private static browserStorage(): KeyValueStorage {
+    try {
+      if (typeof globalThis.localStorage !== 'undefined') return globalThis.localStorage;
+    } catch {
+      // Access can throw in privacy modes; fall back to memory.
+    }
+    return new MemoryStorage();
+  }
 
   key(collection: string): string {
     return `${STORAGE_NAMESPACE}:v${SCHEMA_VERSION}:${collection}`;
