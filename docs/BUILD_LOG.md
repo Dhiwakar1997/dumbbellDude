@@ -203,7 +203,25 @@ Next run: Phase 4 implement in generation order domain → ports → adapters �
 app, stamping every node, with tests (domain + services with in-memory fakes, repository contract tests against
 fake + LocalStorage, RTL tests for ActiveWorkoutScreen and RoutineEditorScreen).
 
+## Run 3 — Phase 4 + Phase 5 (2026-11-01)
+
+### Phase 4 — Implement (in progress)
+- Stamp used everywhere: `// trussel: <T-ID>@1` on the line above each definition; file modules stamped at the
+  top of the file. (Server stamp format is `trussel: <node ID>@<revision>`; committed_revision = 1.)
+- Watermark + body-hash: the run prompt mentions a "watermark + body-hash convention", but the Trussel server's
+  stamp rule (get_context.stamp) defines none. Per "follow the server's instructions", I did **not** invent one —
+  see Decisions.
+- Milestones: `3971649` domain (27 tests) · `ec90fbc` application services + in-memory fakes (17 tests) ·
+  `d3079a2` adapters + repository contract suite against fake AND LocalStorage (24 tests).
+- report_outside_pass D-1: src/adapters/guards.ts shape guards + MemoryStorage helper (undeclared helpers).
+- Next: ui/format, ui/components (+ components.css from design CSS), app, screens, RTL tests.
+
 ## Decisions
+- (Run 3) No watermark/body-hash added to stamps: the server's stamp rule is the only convention and it defines
+  just `trussel: <ID>@<revision>`. Prompt vs server conflict resolved in favour of the server.
+- (Run 3) Shape guards for storage reads live in src/adapters/guards.ts (reported outside pass), duplicated in a
+  stricter form inside DataTransferService for import validation — adapters (apiClients) may not depend on a
+  service (hooks), and the domain had no declared guard node.
 - (Run 2) possible_duplicates only ever matched my own sibling nodes in this pass (Exercise vs WorkoutExercise,
   kgToLb vs lbToKg, …). I ran get_node on the first set of hits; after that, for hits that are nodes I had just
   written in this pass (content already known), I judged them distinct without a separate get_node. Pre-checks
