@@ -6,7 +6,9 @@ Times in IST (Asia/Kolkata).
 - **Run 1 (2026-11-01): Phase 0 + Phase 1 — DONE.** Design set D-ZWEKZCRHB5 v178.
 - **Run 2 (2026-11-01): Phase 2 + Phase 3 — DONE.** Scaffold commit e866bc1; pass P-3 committed (rev 1,
   199 nodes, 253 edges, 0 violations).
-- Next run: **Phase 4 — Implement** (stamps `// trussel: <T-ID>` above each definition).
+- **Run 3 (2026-11-01): Phase 4 + Phase 5 — DONE** (one open item: 15 "cross-slice" findings, see Blocked).
+  199/199 nodes implemented, 98/98 tests, build + tsc green.
+- Next run: **Phase 6 — Netlify ready** (build, confirm dist + SPA redirect, rewrite README, commit).
 
 ## Run 1 — Phase 0 + Phase 1 (2026-11-01)
 
@@ -213,13 +215,49 @@ fake + LocalStorage, RTL tests for ActiveWorkoutScreen and RoutineEditorScreen).
   see Decisions.
 - Milestones: `3971649` domain (27 tests) · `ec90fbc` application services + in-memory fakes (17 tests) ·
   `d3079a2` adapters + repository contract suite against fake AND LocalStorage (24 tests).
-- report_outside_pass D-1: src/adapters/guards.ts shape guards + MemoryStorage helper (undeclared helpers).
-- Next: ui/format, ui/components (+ components.css from design CSS), app, screens, RTL tests.
+- report_outside_pass D-1: src/adapters/guards.ts shape guards + MemoryStorage helper (undeclared helpers;
+  guards.ts later removed — see Phase 5). D-2: small undeclared exports (LineChart chartScale, MUSCLE_OPTIONS,
+  EditorDraft type, domain startOfWeek, Services type).
+- `acb9904` UI components (32) + src/ui/format.ts + components.css (ported 1:1 from the design set's component CSS,
+  same class names and `--vd-*` tokens) · `ceea9f5` 12 screens, app composition root/context/router, main.tsx;
+  RTL tests: ActiveWorkoutScreen (9), RoutineEditorScreen (5), App route smoke + core loop (12).
+- report_progress recorded on the domain modules, WorkoutService and LocalStorageStore.
+- **Phase 4 done**: every one of the 199 pass nodes has exactly one stamp (199 unique `trussel: …@1` in src).
+
+### Phase 5 — Verify (done)
+- `npm run build` ✓ — `dist/index.html 0.62 kB`, `assets/index-*.css 29.54 kB (4.71 kB gz)`,
+  `assets/index-*.js 227.21 kB (72.29 kB gz)`, 96 modules, built in ~1.5 s.
+- `npx vitest run` ✓ — **Test Files 14 passed (14), Tests 98 passed (98)**
+  (domain 27 · services 17 · repository contract + system 24 · format 3 · ActiveWorkout 9 · RoutineEditor 5 · App 13).
+- `tsc --noEmit` (app + node configs) ✓ — 0 errors.
+- `request_analysis` (3 runs): every pass node **implemented** — `get_architecture view=incoming` lists 0 designed-
+  but-unbuilt nodes; spot checks (validateName, model, WorkoutService.getActive, ActiveWorkoutScreen) show
+  `implementation_status: implemented` with `stamp_found_at` file/line. After full implementation the nodes report
+  `in_pass: false` and the session's pass binding fell back to default P-2 (get_pass now shows P-2, empty).
+- Flow violations, first analysis (17):
+  - **Real, fixed** (`bed0a74`): `ServicesContext (hooks) → container (routes)` leftward (type import of
+    `Services`) → the `Services` interface now lives in ServicesContext and container re-exports it;
+    `LocalStorageStore → guards.ts` leftward (the undeclared guards module was auto-placed in the *components*
+    column) → guards inlined as private functions in each repository file, guards.ts deleted; store's default-storage
+    helper moved into the class as a static.
+  - **Remaining (15), all `why: "cross-slice"`** — see Blocked: 11 × service class/module `CALLS` a domain module
+    (records/streak/validation/volume, hooks→types, rightward) and 4 × `LocalStorageStore CALLS <repo module>`
+    (the store invoking the `isValid` guard callback each repository passes in; same column).
+- Design match (Home S-VCG8FMQQZQ, Active S-YKPWM78WME, Progress S-XJ9Y32E8SM; re-read with get_component
+  C-CEJYG76YXT + snapshot_screen S-XJ9Y32E8SM): tokens and structure match (CSS ported verbatim). Mismatches
+  found and fixed in `0ab1d42`: exercise header subtitle "Chest · Barbell" (code showed only the muscle);
+  column label "Weight" (code showed the unit); discard copy "42 minutes of gains" (code said "42 min"); Progress
+  showed a 4th PR kind (best set volume) not in the design → hidden on that screen. Intentional, documented
+  differences: Home CTA sits in a sticky thumb-zone footer (design prompt rule) instead of after the card; the
+  decorative "•••" exercise menu is omitted (no actions designed); tab bar is `position: fixed` in the app.
 
 ## Decisions
 - (Run 3) No watermark/body-hash added to stamps: the server's stamp rule is the only convention and it defines
   just `trussel: <ID>@<revision>`. Prompt vs server conflict resolved in favour of the server.
-- (Run 3) Shape guards for storage reads live in src/adapters/guards.ts (reported outside pass), duplicated in a
+- (Run 3) Progress shows the three PR kinds the design shows (heaviest weight, best e1RM, most reps); the domain
+  still computes best-set volume. Discard copy uses whole minutes as in the design.
+- (Run 3) Superseded: shape guards were first in src/adapters/guards.ts; after analysis placed that module in the
+  wrong column they were moved into each repository file. Original note: shape guards for storage reads lived in src/adapters/guards.ts (reported outside pass), duplicated in a
   stricter form inside DataTransferService for import validation — adapters (apiClients) may not depend on a
   service (hooks), and the domain had no declared guard node.
 - (Run 2) possible_duplicates only ever matched my own sibling nodes in this pass (Exercise vs WorkoutExercise,
@@ -274,7 +312,15 @@ fake + LocalStorage, RTL tests for ActiveWorkoutScreen and RoutineEditorScreen).
   removed per the rules — the owner may delete them or keep them as implementation hints.
 
 ## Blocked
-_(nothing blocked)_
+- (Run 3) **15 "cross-slice" flow violations remain in get_architecture** and I could not clear them without
+  breaking the committed design. Evidence they are a heuristic false positive rather than a real inward/outward
+  breach: (1) all point rightward (hooks→types, or within apiClients), which the profile's own rule allows;
+  (2) `explain_connection RoutineService → domain/validation.ts` returns `contains_violation: false`; (3) the same
+  kind of call from screen *functions* to domain modules (21 edges, routes→types) is not flagged — only calls
+  that originate in a *class* (services, LocalStorageStore) towards a module-level function are. Clearing them
+  would mean turning the domain's pure functions into classes/static members (or turning services into
+  functions), i.e. a redesign of committed nodes, which needs the owner. Left for the owner to decide (or for the
+  Trussel team to confirm the heuristic).
 
 ## How Trussel helped
 - `get_context` gave the stamp format and confirmed sandbox mode up front, and showed a default pass already
@@ -307,3 +353,16 @@ _(nothing blocked)_
   the server's "get_node each hit" rule would have doubled the calls; `get_architecture` doesn't show
   uncommitted pass nodes, so flow violations could only be checked after commit; `get_pass` output for a pass this
   size is 76 KB (I parsed it with a script rather than reading it).
+- (Run 3) Stamps linked code to design precisely: `get_node` returns `stamp_found_at` (file + line) and the linked
+  code symbol for each node, and `get_architecture view=incoming` gave a one-call "is anything still unbuilt?"
+  answer (0) across all 199 nodes.
+- (Run 3) `request_analysis` + `get_architecture` caught two real layering bugs the compiler and 98 tests could
+  not: a leftward type import (ServicesContext → container) and an undeclared helper module (guards.ts) that the
+  analyser placed in the wrong column. Both fixed and confirmed gone on re-analysis.
+- (Run 3) `get_component` + `snapshot_screen` made the design-vs-code check concrete: rereading C-CEJYG76YXT
+  exposed two copy mismatches in the exercise header, and the Progress snapshot showed three PR rows vs four in code.
+- (Run 3) Where it got in the way: the "cross-slice" heuristic disagrees with `explain_connection` and with the
+  stated flow rule (see Blocked); after the pass was fully implemented the session silently rebound to the
+  default pass P-2, so `get_pass` stopped showing P-3 — status had to be checked via get_node/get_architecture;
+  `report_progress` is per node only (no bulk), so I reported per file/class rather than on all 199 nodes; the
+  server defines no watermark/body-hash convention although the brief expected one.
