@@ -75,6 +75,10 @@ npm run build
 netlify deploy --prod --dir dist
 ```
 
+## Review
+
+See [docs/TRUSSEL_REVIEW.md](docs/TRUSSEL_REVIEW.md) for the gaps, where Trussel got in the way, and the decisions waiting on the owner.
+
 ## Evidence
 
 Screenshots of the Trussel design set, the architecture canvas, the analysis results and the running app are in
