@@ -1,0 +1,16 @@
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  min-height: 100dvh;
+  background: var(--vd-background);
+  color: var(--vd-foreground);
+  font-family: var(--vd-font);
+  font-size: var(--vd-text);
+  line-height: var(--vd-leading);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+#root { max-width: 480px; margin: 0 auto; min-height: 100dvh; position: relative; }
+button, input, select { font: inherit; color: inherit; }
