@@ -192,6 +192,7 @@ html:has(.resttimer) { scroll-padding-bottom: var(--vd-resttimer-height); }
 .linechart-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--vd-space-2); padding: 0 var(--vd-space-1) var(--vd-space-2); }
 .linechart-title { color: var(--vd-foreground); font-size: var(--vd-text); font-weight: 800; }
 .linechart-delta { color: var(--vd-success); font-size: var(--vd-text-small); font-weight: 700; }
+.linechart-delta.is-down { color: var(--vd-muted); }
 .linechart svg { display: block; width: 100%; height: auto; }
 .linechart-grid line { stroke: var(--vd-border); stroke-width: 1; }
 .linechart-y text { fill: var(--vd-muted); font-size: 13px; text-anchor: end; }

@@ -36,6 +36,8 @@ export function LineChart(props: {
   title: string;
   points: { label: string; value: number }[];
   delta?: string;
+  /** True when the change is a drop: it is then not shown in the success colour. */
+  deltaDown?: boolean;
   unit: string;
   emptyText: string;
 }): JSX.Element {
@@ -107,7 +109,7 @@ export function LineChart(props: {
     <figure className={`linechart${empty ? ' is-empty' : ''}`}>
       <figcaption className="linechart-head">
         <span className="linechart-title">{props.title}</span>
-        {!empty && props.delta && <span className="linechart-delta">{props.delta}</span>}
+        {!empty && props.delta && <span className={`linechart-delta${props.deltaDown ? ' is-down' : ''}`}>{props.delta}</span>}
       </figcaption>
       {body}
     </figure>

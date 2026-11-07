@@ -1,4 +1,6 @@
-import { chartScale } from './LineChart';
+import { render, screen } from '@testing-library/react';
+import { createElement } from 'react';
+import { chartScale, LineChart } from './LineChart';
 
 describe('chartScale', () => {
   it('puts every tick on a round step value', () => {
@@ -9,5 +11,22 @@ describe('chartScale', () => {
 
   it('keeps at least three steps for a flat series', () => {
     expect(chartScale([60, 60]).ticks).toEqual([70, 65, 60, 55]);
+  });
+});
+
+describe('LineChart delta', () => {
+  const points = [
+    { label: 'Oct 1', value: 100 },
+    { label: 'Oct 8', value: 90 },
+  ];
+
+  it('does not show a drop in the success colour', () => {
+    render(createElement(LineChart, { title: 'Best set', points, unit: 'kg', emptyText: '', delta: '−10 kg in 7 days', deltaDown: true }));
+    expect(screen.getByText('−10 kg in 7 days')).toHaveClass('is-down');
+  });
+
+  it('shows a gain in the success colour', () => {
+    render(createElement(LineChart, { title: 'Best set', points, unit: 'kg', emptyText: '', delta: '+10 kg in 7 days' }));
+    expect(screen.getByText('+10 kg in 7 days')).not.toHaveClass('is-down');
   });
 });

@@ -98,6 +98,7 @@ export function ProgressScreen(): JSX.Element {
         unit={units}
         points={series.map((p) => ({ label: axisLabel(p.date), value: p.value }))}
         delta={first && last && series.length > 1 ? deltaText(first, last, units) : undefined}
+        deltaDown={first !== undefined && last !== undefined && last.value < first.value}
         emptyText="Log this lift twice to see a trend line."
       />
       <SectionTitle title="Personal records" />
