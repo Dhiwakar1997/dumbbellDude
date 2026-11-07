@@ -6,8 +6,8 @@ function setup() {
   const { services, ports } = makeTestServices();
   services.workouts.startEmpty();
   services.workouts.addExercises(['seed-bench-press']);
-  renderAt(services, [{ path: '/workout', element: <ActiveWorkoutScreen /> }], '/workout');
-  return { services, ports };
+  const view = renderAt(services, [{ path: '/workout', element: <ActiveWorkoutScreen /> }], '/workout');
+  return { services, ports, view };
 }
 
 describe('ActiveWorkoutScreen', () => {
@@ -31,6 +31,19 @@ describe('ActiveWorkoutScreen', () => {
       expect(within(row).queryByText('kg')).not.toBeInTheDocument();
       expect(within(row).queryByText('reps')).not.toBeInTheDocument();
     }
+  });
+
+  it('reserves room below the sets while the rest timer is open', () => {
+    const { view } = setup();
+    const page = view.container.querySelector('.screen')!;
+    expect(page).not.toHaveClass('is-resting');
+    fireEvent.change(screen.getByLabelText('Set 1 weight'), { target: { value: '60' } });
+    fireEvent.change(screen.getByLabelText('Set 1 reps'), { target: { value: '8' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Mark set 1 done' }));
+    expect(screen.getByRole('dialog', { name: 'Rest timer' })).toBeInTheDocument();
+    expect(page).toHaveClass('is-resting');
+    fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
+    expect(page).not.toHaveClass('is-resting');
   });
 
   it('shows the validation error on the set row when ticking a set with 0 reps', () => {

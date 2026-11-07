@@ -156,6 +156,11 @@ select.textfield-input { background-image: linear-gradient(45deg, transparent 50
 .textfield.is-error .textfield-input { border-color: var(--vd-danger); background-color: var(--vd-danger-soft); }
 
 /* C-610GB7K16B RestTimerOverlay */
+/* The open timer covers the bottom of the workout: reserve that space so every control can still scroll above it. */
+:root { --vd-resttimer-height: calc(180px + var(--vd-tap-lg) + 6 * var(--vd-space-5) + env(safe-area-inset-bottom, 0px)); }
+html:has(.resttimer) { scroll-padding-bottom: var(--vd-resttimer-height); }
+.screen.is-resting { padding-bottom: var(--vd-resttimer-height); }
+.screen.is-resting .stickyfooter { visibility: hidden; }
 .resttimer { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; z-index: 40; width: 100%; max-width: 480px; padding: var(--vd-space-5) var(--vd-space-4) calc(var(--vd-space-6) + env(safe-area-inset-bottom, 0px)); background: var(--vd-surface); border-top: 2px solid var(--vd-accent); border-radius: var(--vd-radius-lg) var(--vd-radius-lg) 0 0; box-shadow: 0 -16px 48px var(--vd-scrim); font-family: var(--vd-font); text-align: center; }
 .resttimer-label { margin: 0; color: var(--vd-muted); font-size: var(--vd-text); font-weight: 700; }
 .resttimer-ring { position: relative; width: 180px; height: 180px; margin: var(--vd-space-4) auto; }

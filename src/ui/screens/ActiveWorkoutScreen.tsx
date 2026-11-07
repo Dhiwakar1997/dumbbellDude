@@ -125,7 +125,7 @@ export function ActiveWorkoutScreen(): JSX.Element {
   )} · ${formatWeight(workoutVolume(workout), units)}. Unticked sets won't be saved.`;
 
   return (
-    <div className="screen">
+    <div className={`screen${rest !== null ? ' is-resting' : ''}`}>
       <WorkoutTimerBar
         name={workout.name}
         elapsed={formatElapsed(elapsed)}
