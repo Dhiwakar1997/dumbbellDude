@@ -14,3 +14,10 @@ body {
 }
 #root { max-width: 480px; margin: 0 auto; min-height: 100dvh; position: relative; }
 button, input, select { font: inherit; color: inherit; }
+
+/* Keep keyboard focus clear of fixed and sticky bars (WCAG 2.4.11): scrolling a focused control into view
+   stops short of the tab bar, the sticky CTA footer and the workout timer bar. */
+html:has(.tabbar) { scroll-padding-bottom: calc(var(--vd-tabbar-height) + env(safe-area-inset-bottom, 0px) + var(--vd-space-2)); }
+html:has(.stickyfooter) { scroll-padding-bottom: calc(var(--vd-tap-lg) + 4 * var(--vd-space-2) + var(--vd-space-4) + env(safe-area-inset-bottom, 0px)); }
+html:has(.stickyfooter.is-abovetabs) { scroll-padding-bottom: calc(var(--vd-tabbar-height) + var(--vd-tap-lg) + 4 * var(--vd-space-2) + env(safe-area-inset-bottom, 0px)); }
+html:has(.timerbar) { scroll-padding-top: calc(var(--vd-text-number) + var(--vd-tap) + var(--vd-space-3)); }
