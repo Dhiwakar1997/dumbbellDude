@@ -1,9 +1,10 @@
 // trussel: T-2031468DDQ@1
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useServices } from '../../app/ServicesContext';
 import type { PersonalRecord, PRKind, Units } from '../../domain/model';
 import { formatWeight, toDisplayWeight } from '../../domain/units';
 import { AppHeader } from '../components/AppHeader';
+import { PrimaryButton } from '../components/Buttons';
 import { EmptyState } from '../components/EmptyState';
 import { LineChart } from '../components/LineChart';
 import { PRRow } from '../components/PRRow';
@@ -46,6 +47,8 @@ function deltaText(first: { date: string; value: number }, last: { date: string;
 export function ProgressScreen(): JSX.Element {
   const { progress, settings, exercises } = useServices();
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
+  const startWorkout = <PrimaryButton onClick={() => navigate('/start')}>Start workout</PrimaryButton>;
   const units = settings.getSettings().units;
   const logged = progress.loggedExercises();
   const wanted = params.get('exercise');
@@ -58,6 +61,7 @@ export function ProgressScreen(): JSX.Element {
       <div className="screen">
         <AppHeader eyebrow="Progress" title="Getting stronger" />
         <EmptyState title="No lifts logged yet." body="Progress needs something to progress from." />
+        {startWorkout}
       </div>
     );
   }
@@ -79,6 +83,7 @@ export function ProgressScreen(): JSX.Element {
         <AppHeader eyebrow="Progress" title="Getting stronger" />
         {exercisePicker}
         <EmptyState title={`No ${selected.name} logged yet.`} body="Tick a set of it in a workout and its progress starts here." />
+        {startWorkout}
       </div>
     );
   }

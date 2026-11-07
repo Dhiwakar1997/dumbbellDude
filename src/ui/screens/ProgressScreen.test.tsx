@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { makeTestServices, renderAt } from '../../test/renderWithServices';
 import { ProgressScreen } from './ProgressScreen';
 
@@ -26,5 +26,13 @@ describe('ProgressScreen', () => {
     expect(screen.getByLabelText('Exercise')).toHaveDisplayValue('Deadlift');
     expect(screen.getByText('No Deadlift logged yet.')).toBeInTheDocument();
     expect(screen.queryByText('Personal records')).not.toBeInTheDocument();
+  });
+
+  it('offers to start a workout when nothing is logged yet', () => {
+    const { services } = makeTestServices();
+    renderAt(services, routes, '/progress');
+    expect(screen.getByText('No lifts logged yet.')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Start workout' }));
+    expect(screen.getByTestId('location')).toHaveTextContent('/start');
   });
 });
