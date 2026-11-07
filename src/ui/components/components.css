@@ -215,7 +215,8 @@ html:has(.resttimer) { scroll-padding-bottom: var(--vd-resttimer-height); }
 .rexrow { margin: var(--vd-space-2) var(--vd-space-4); padding: var(--vd-space-2) var(--vd-space-2) var(--vd-space-2) var(--vd-space-3); background: var(--vd-surface); border: 1px solid var(--vd-border); border-radius: var(--vd-radius); font-family: var(--vd-font); }
 .rexrow-main { display: flex; align-items: center; gap: var(--vd-space-2); }
 .rexrow-text { flex: 1; min-width: 0; }
-.rexrow-name { display: flex; gap: var(--vd-space-2); margin: 0; color: var(--vd-foreground); font-size: var(--vd-text); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rexrow-name { display: flex; align-items: baseline; gap: var(--vd-space-2); margin: 0; color: var(--vd-foreground); font-size: var(--vd-text); font-weight: 700; line-height: 1.25; }
+.rexrow-name span:last-child { min-width: 0; overflow-wrap: break-word; }
 .rexrow-order { color: var(--vd-accent); font-weight: 800; }
 .rexrow-muscle { margin: 2px 0 0; color: var(--vd-muted); font-size: var(--vd-text-small); }
 .rexrow-remove { margin-left: var(--vd-space-2); color: var(--vd-muted); font-size: var(--vd-text-small); font-weight: 700; text-decoration: underline; min-height: 24px; }
