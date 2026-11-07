@@ -257,6 +257,11 @@ html:has(.resttimer) { scroll-padding-bottom: var(--vd-resttimer-height); }
 /* C-NZWWYJ84GF StickyFooter */
 .stickyfooter { position: sticky; bottom: 0; z-index: 10; margin-top: var(--vd-space-2); padding: var(--vd-space-2) 0 calc(var(--vd-space-4) + env(safe-area-inset-bottom, 0px)); background: var(--vd-background); border-top: 1px solid var(--vd-border); }
 .stickyfooter.is-abovetabs { bottom: var(--vd-tabbar-height); padding-bottom: var(--vd-space-2); }
+/* Short viewports (a phone in landscape, 200% zoom): the bars around the content would take half the height,
+   so the CTA scrolls with the content instead of staying pinned. */
+@media (max-height: 500px) {
+  .stickyfooter { position: static; }
+}
 
 /* C-R1A986TJBZ ExerciseSummaryHeader / C-GFP18A5XFT SetSummaryLine */
 .exsummary { margin: var(--vd-space-3) var(--vd-space-4) 0; padding: var(--vd-space-3) var(--vd-space-4) var(--vd-space-2); background: var(--vd-surface); border: 1px solid var(--vd-border); border-bottom: none; border-radius: var(--vd-radius) var(--vd-radius) 0 0; font-family: var(--vd-font); }
