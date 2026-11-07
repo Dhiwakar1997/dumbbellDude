@@ -152,7 +152,6 @@ export function ActiveWorkoutScreen(): JSX.Element {
                     previous={prev ? `${toDisplayWeight(prev.weightKg, units)} × ${prev.reps}` : '—'}
                     weight={drafts[`${s.id}:w`] ?? String(toDisplayWeight(s.weightKg, units))}
                     reps={drafts[`${s.id}:r`] ?? String(s.reps)}
-                    unit={units}
                     done={s.done}
                     error={errors[s.id] ?? null}
                     onWeightChange={(v) => editWeight(block.id, s.id, v)}

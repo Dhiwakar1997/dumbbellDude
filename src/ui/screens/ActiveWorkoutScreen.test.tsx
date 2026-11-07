@@ -23,6 +23,16 @@ describe('ActiveWorkoutScreen', () => {
     expect(screen.getByRole('button', { name: 'Finish workout' })).toBeInTheDocument();
   });
 
+  it('shows the weight unit once in the column header, leaving the set fields to the numbers', () => {
+    setup();
+    fireEvent.click(screen.getByRole('button', { name: '+ Add set' }));
+    expect(screen.getAllByText('kg')).toHaveLength(1);
+    for (const row of screen.getAllByTestId('set-row')) {
+      expect(within(row).queryByText('kg')).not.toBeInTheDocument();
+      expect(within(row).queryByText('reps')).not.toBeInTheDocument();
+    }
+  });
+
   it('shows the validation error on the set row when ticking a set with 0 reps', () => {
     setup();
     fireEvent.click(screen.getByRole('checkbox', { name: 'Mark set 1 done' }));

@@ -13,7 +13,9 @@ export function ExerciseBlockHeader(props: { name: string; muscle: string; unitL
       <div className="exblock-cols" aria-hidden="true">
         <span>Set</span>
         <span>Previous</span>
-        <span title={`Weight in ${props.unitLabel}`}>Weight</span>
+        <span title={`Weight in ${props.unitLabel}`}>
+          <span>Weight</span> <span className="exblock-cols-unit">{props.unitLabel}</span>
+        </span>
         <span>Reps</span>
         <span>Done</span>
       </div>
@@ -28,7 +30,6 @@ export function SetRow(props: {
   previous: string;
   weight: string;
   reps: string;
-  unit: string;
   done: boolean;
   error?: string | null;
   onWeightChange: (v: string) => void;
@@ -53,7 +54,6 @@ export function SetRow(props: {
             onChange={(e) => props.onWeightChange(e.target.value)}
             aria-label={`Set ${n} weight`}
           />
-          <span className="setrow-unit">{props.unit}</span>
         </label>
         <label className="setrow-field setrow-field-reps">
           <span className="visually-hidden">Set {n} reps</span>
@@ -67,7 +67,6 @@ export function SetRow(props: {
             aria-invalid={props.error ? true : undefined}
             aria-describedby={props.error ? errorId : undefined}
           />
-          <span className="setrow-unit">reps</span>
         </label>
         <button
           type="button"
