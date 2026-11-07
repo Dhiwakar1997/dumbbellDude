@@ -7,6 +7,7 @@ import { AppHeader } from '../components/AppHeader';
 import { PrimaryButton, SecondaryButton } from '../components/Buttons';
 import { RoutineCard } from '../components/RoutineCard';
 import { SectionTitle } from '../components/SectionTitle';
+import { useBack } from '../useBack';
 
 // Implements S-2YJQSZFD9R Start workout.
 // trussel: T-RT5HEJZJER@1
@@ -14,6 +15,7 @@ export function StartWorkoutScreen(): JSX.Element {
   const { workouts, routines } = useServices();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const cancel = useBack('/');
 
   if (workouts.getActive()) return <Navigate to="/workout" replace />;
   const list = routines.list();
@@ -30,7 +32,7 @@ export function StartWorkoutScreen(): JSX.Element {
 
   return (
     <div className="screen">
-      <AppHeader eyebrow="New session" title="Start workout" action={{ label: 'Cancel', onClick: () => navigate(-1) }} />
+      <AppHeader eyebrow="New session" title="Start workout" action={{ label: 'Cancel', onClick: cancel }} />
       <PrimaryButton onClick={() => run(() => workouts.startEmpty())}>Start empty workout</PrimaryButton>
       {error && (
         <p className="inline-error" role="alert">

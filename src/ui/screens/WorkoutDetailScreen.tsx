@@ -1,5 +1,5 @@
 // trussel: T-119M3CRVT0@1
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useServices } from '../../app/ServicesContext';
 import { formatWeight, toDisplayWeight } from '../../domain/units';
 import { exerciseVolume, setVolume } from '../../domain/volume';
@@ -9,6 +9,7 @@ import { ExerciseSummaryHeader, SetSummaryLine } from '../components/ExerciseSum
 import { StatRow } from '../components/StatRow';
 import { StatTile } from '../components/StatTile';
 import { formatShortDate, formatTimeOfDay } from '../format';
+import { useBack } from '../useBack';
 
 function splitWeight(text: string): [string, string] {
   const i = text.lastIndexOf(' ');
@@ -19,11 +20,11 @@ function splitWeight(text: string): [string, string] {
 // trussel: T-2E754EAKBM@1
 export function WorkoutDetailScreen(): JSX.Element {
   const { workouts, settings } = useServices();
-  const navigate = useNavigate();
   const { id = '' } = useParams();
   const units = settings.getSettings().units;
   const detail = workouts.getWorkoutDetail(id);
-  const back = { label: 'Back', onClick: () => navigate(-1) };
+  const goBack = useBack('/history');
+  const back = { label: 'Back', onClick: goBack };
 
   if (!detail) {
     return (
