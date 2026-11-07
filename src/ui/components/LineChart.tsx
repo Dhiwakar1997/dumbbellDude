@@ -1,7 +1,8 @@
 // trussel: T-5GTABSSBCB@1
-// Hand-rolled SVG line chart (no chart library), geometry from the design: viewBox 340×180, plot x 40..320, y 20..160.
+// Hand-rolled SVG line chart (no chart library), geometry from the design: viewBox 340×180, plot y 20..160.
+// The plot starts at x 48 (the design's 40, plus room for 4-digit axis labels at a readable size) and ends at 320.
 
-const X0 = 40;
+const X0 = 48;
 const X1 = 320;
 const Y0 = 20;
 const Y1 = 160;
@@ -62,12 +63,12 @@ export function LineChart(props: {
       >
         <g className="linechart-grid">
           {ticks.map((t) => (
-            <line key={t} x1="36" y1={y(t)} x2="332" y2={y(t)} />
+            <line key={t} x1={X0 - 4} y1={y(t)} x2="332" y2={y(t)} />
           ))}
         </g>
         <g className="linechart-y">
           {ticks.map((t) => (
-            <text key={t} x="30" y={y(t) + 4}>
+            <text key={t} x={X0 - 8} y={y(t) + 4}>
               {Number.isInteger(t) ? t : t.toFixed(1)}
             </text>
           ))}
@@ -86,7 +87,7 @@ export function LineChart(props: {
           ))}
         </g>
         <g className="linechart-x">
-          <text x={x(0)} y="176">
+          <text x={x(0)} y="176" textAnchor="start">
             {first.label}
           </text>
           {points.length > 2 && (
@@ -94,7 +95,7 @@ export function LineChart(props: {
               {points[mid]!.label}
             </text>
           )}
-          <text x={x(points.length - 1)} y="176">
+          <text x={x(points.length - 1)} y="176" textAnchor="end">
             {last.label}
           </text>
         </g>
