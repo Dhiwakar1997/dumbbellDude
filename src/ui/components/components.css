@@ -129,6 +129,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 /* C-2586HK1N9A Chip / C-QPQ8K6TKAH ChipFilter */
 .chipfilter { display: flex; gap: var(--vd-space-2); padding: var(--vd-space-2) var(--vd-space-4); overflow-x: auto; scrollbar-width: none; font-family: var(--vd-font); }
 .chipfilter.is-wrap { flex-wrap: wrap; overflow: visible; }
+/* With a mouse, a sideways row with a hidden scrollbar cannot be scrolled by the wheel: wrap instead. */
+@media (hover: hover) and (pointer: fine) {
+  .chipfilter { flex-wrap: wrap; overflow: visible; }
+}
 .chip { flex: none; display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--vd-space-4); border: 1px solid var(--vd-border); border-radius: var(--vd-radius-pill); background: var(--vd-surface); color: var(--vd-foreground); font-family: var(--vd-font); font-size: var(--vd-text); font-weight: 600; white-space: nowrap; }
 .chip.is-selected { background: var(--vd-accent); border-color: var(--vd-accent); color: var(--vd-on-accent); font-weight: 800; }
 
