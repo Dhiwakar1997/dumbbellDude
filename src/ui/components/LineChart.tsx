@@ -23,8 +23,9 @@ export function chartScale(values: number[]): { min: number; max: number; ticks:
   const step = niceStep(hi - lo);
   const min = Math.floor(lo / step) * step;
   const max = Math.max(min + 3 * step, Math.ceil(hi / step) * step);
+  // One gridline per step, so every label is a round value of the step (110, 100, 90 …, never 96.7).
   const ticks: number[] = [];
-  for (let t = max; t >= min - 1e-9; t -= (max - min) / 3) ticks.push(Math.round(t * 100) / 100);
+  for (let t = max; t >= min - 1e-9; t -= step) ticks.push(Math.round(t * 100) / 100);
   return { min, max, ticks };
 }
 
