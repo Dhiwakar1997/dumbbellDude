@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useServices } from '../../app/ServicesContext';
 import { ValidationError } from '../../domain/model';
+import { validateRoutineTargets } from '../../domain/validation';
 import { AppHeader } from '../components/AppHeader';
 import { PrimaryButton, SecondaryButton } from '../components/Buttons';
 import { EmptyState } from '../components/EmptyState';
@@ -18,6 +19,14 @@ export interface EditorDraft {
 }
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** Which target input a row's validation error is about, using the same rule the service applies. */
+function targetErrorField(row: EditorDraft['rows'][number]): 'sets' | 'reps' | undefined {
+  const sets = Number(row.sets);
+  if (validateRoutineTargets({ exerciseId: row.exerciseId, targetSets: sets, targetReps: 1 })) return 'sets';
+  if (validateRoutineTargets({ exerciseId: row.exerciseId, targetSets: 1, targetReps: Number(row.reps) })) return 'reps';
+  return undefined;
+}
 
 // Implements S-EAA9SRC6AG Routine editor (state "Name missing").
 // trussel: T-AW2FV75YDX@1
@@ -128,6 +137,7 @@ export function RoutineEditorScreen(): JSX.Element {
               sets={row.sets}
               reps={row.reps}
               error={rowErrors[i] ?? null}
+              errorField={targetErrorField(row)}
               canMoveUp={i > 0}
               canMoveDown={i < draft.rows.length - 1}
               onSetsChange={(v) => updateRows(draft.rows.map((r, j) => (j === i ? { ...r, sets: v } : r)))}

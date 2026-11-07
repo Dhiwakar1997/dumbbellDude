@@ -57,6 +57,16 @@ describe('ActiveWorkoutScreen', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
+  it('marks the weight field, not reps, when the weight is what failed', () => {
+    setup();
+    fireEvent.change(screen.getByLabelText('Set 1 weight'), { target: { value: '1200' } });
+    fireEvent.change(screen.getByLabelText('Set 1 reps'), { target: { value: '5' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Mark set 1 done' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Max 1000 kg');
+    expect(screen.getByLabelText('Set 1 weight')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByLabelText('Set 1 reps')).not.toHaveAttribute('aria-invalid');
+  });
+
   it('ticks a valid set, marks it done and opens the rest timer', () => {
     vi.useFakeTimers();
     const { services } = setup();

@@ -9,6 +9,8 @@ export function RoutineExerciseRow(props: {
   sets: string;
   reps: string;
   error?: string | null;
+  /** Which target the error is about; the error marks that input only. */
+  errorField?: 'sets' | 'reps';
   canMoveUp: boolean;
   canMoveDown: boolean;
   onSetsChange: (v: string) => void;
@@ -34,16 +36,18 @@ export function RoutineExerciseRow(props: {
         </div>
         <div className="rexrow-target">
           <input
-            className="rexrow-num"
+            className={`rexrow-num${props.error && props.errorField === 'sets' ? ' is-invalid' : ''}`}
             inputMode="numeric"
+            aria-invalid={props.error && props.errorField === 'sets' ? true : undefined}
             value={props.sets}
             onChange={(e) => props.onSetsChange(e.target.value)}
             aria-label={`${props.name} target sets`}
           />
           <span className="rexrow-x">×</span>
           <input
-            className="rexrow-num"
+            className={`rexrow-num${props.error && props.errorField === 'reps' ? ' is-invalid' : ''}`}
             inputMode="numeric"
+            aria-invalid={props.error && props.errorField === 'reps' ? true : undefined}
             value={props.reps}
             onChange={(e) => props.onRepsChange(e.target.value)}
             aria-label={`${props.name} target reps`}

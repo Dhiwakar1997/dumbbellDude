@@ -32,6 +32,8 @@ export function SetRow(props: {
   reps: string;
   done: boolean;
   error?: string | null;
+  /** Which input the error is about; the error marks that field only. */
+  errorField?: 'weight' | 'reps';
   onWeightChange: (v: string) => void;
   onRepsChange: (v: string) => void;
   onToggleDone: () => void;
@@ -39,12 +41,14 @@ export function SetRow(props: {
   const n = props.index + 1;
   const cls = `setrow${props.done ? ' is-done' : ''}${props.error ? ' is-error' : ''}`;
   const errorId = `set-error-${n}-${props.previous}`.replace(/\W+/g, '-');
+  const weightInvalid = Boolean(props.error) && props.errorField === 'weight';
+  const repsInvalid = Boolean(props.error) && props.errorField !== 'weight';
   return (
     <div className={cls} data-testid="set-row">
       <div className="setrow-main">
         <span className="setrow-num">{n}</span>
         <span className="setrow-prev">{props.previous}</span>
-        <label className="setrow-field">
+        <label className={`setrow-field${weightInvalid ? ' is-invalid' : ''}`}>
           <span className="visually-hidden">Set {n} weight</span>
           <input
             className="setrow-input"
@@ -53,9 +57,11 @@ export function SetRow(props: {
             value={props.weight}
             onChange={(e) => props.onWeightChange(e.target.value)}
             aria-label={`Set ${n} weight`}
+            aria-invalid={weightInvalid ? true : undefined}
+            aria-describedby={weightInvalid ? errorId : undefined}
           />
         </label>
-        <label className="setrow-field setrow-field-reps">
+        <label className={`setrow-field setrow-field-reps${repsInvalid ? ' is-invalid' : ''}`}>
           <span className="visually-hidden">Set {n} reps</span>
           <input
             className="setrow-input"
@@ -64,8 +70,8 @@ export function SetRow(props: {
             value={props.reps}
             onChange={(e) => props.onRepsChange(e.target.value)}
             aria-label={`Set ${n} reps`}
-            aria-invalid={props.error ? true : undefined}
-            aria-describedby={props.error ? errorId : undefined}
+            aria-invalid={repsInvalid ? true : undefined}
+            aria-describedby={repsInvalid ? errorId : undefined}
           />
         </label>
         <button

@@ -77,6 +77,8 @@ describe('RoutineEditorScreen', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save routine' }));
     expect(screen.getByTestId('routine-row')).toHaveClass('is-error');
     expect(screen.getByRole('alert')).toHaveTextContent('Sets must be 1–20.');
+    expect(screen.getByLabelText('Back Squat target sets')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByLabelText('Back Squat target reps')).not.toHaveAttribute('aria-invalid');
   });
 
   it('removes a row and deletes an existing routine after confirming', () => {

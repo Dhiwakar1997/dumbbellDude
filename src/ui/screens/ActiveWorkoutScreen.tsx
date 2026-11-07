@@ -39,7 +39,7 @@ export function ActiveWorkoutScreen(): JSX.Element {
   const navigate = useNavigate();
   const [workout, setWorkout] = useState<Workout | null>(() => workouts.getActive());
   const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, { message: string; field: 'weight' | 'reps' }>>({});
   const [rest, setRest] = useState<RestState | null>(null);
   const [modal, setModal] = useState<'finish' | 'discard' | null>(null);
   const [finishError, setFinishError] = useState<string | null>(null);
@@ -96,7 +96,10 @@ export function ActiveWorkoutScreen(): JSX.Element {
         setRest({ remaining: defaultRestSeconds, total: defaultRestSeconds, next: nextUp(result.workout) });
       }
     } catch (e) {
-      if (e instanceof ValidationError) setErrors((errs) => ({ ...errs, [setId]: e.message }));
+      if (e instanceof ValidationError) {
+        const field = e.field === 'weight' ? 'weight' : 'reps';
+        setErrors((errs) => ({ ...errs, [setId]: { message: e.message, field } }));
+      }
       else throw e;
     }
   };
@@ -153,7 +156,8 @@ export function ActiveWorkoutScreen(): JSX.Element {
                     weight={drafts[`${s.id}:w`] ?? String(toDisplayWeight(s.weightKg, units))}
                     reps={drafts[`${s.id}:r`] ?? String(s.reps)}
                     done={s.done}
-                    error={errors[s.id] ?? null}
+                    error={errors[s.id]?.message ?? null}
+                    errorField={errors[s.id]?.field}
                     onWeightChange={(v) => editWeight(block.id, s.id, v)}
                     onRepsChange={(v) => editReps(block.id, s.id, v)}
                     onToggleDone={() => toggle(block.id, s.id)}
