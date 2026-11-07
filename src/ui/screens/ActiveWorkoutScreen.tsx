@@ -23,6 +23,15 @@ interface RestState {
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
+/**
+ * Keeps only what a weight (digits and one decimal separator) or a rep count (digits) can contain, so the field
+ * never shows text that differs from the number that is saved (e.g. "6o" would show while 6 kg is stored).
+ */
+function numericText(typed: string, decimal: boolean): string {
+  if (!decimal) return typed.replace(/\D/g, '');
+  return typed.replace(/[^\d.,]/g, '').match(/^\d*(?:[.,]\d*)?/)?.[0] ?? '';
+}
+
 function nextUp(workout: Workout): string {
   for (const e of workout.exercises) {
     const i = e.sets.findIndex((s) => !s.done);
@@ -73,14 +82,16 @@ export function ActiveWorkoutScreen(): JSX.Element {
       return rest;
     });
 
-  const editWeight = (blockId: string, setId: string, text: string) => {
+  const editWeight = (blockId: string, setId: string, typed: string) => {
+    const text = numericText(typed, true);
     setDrafts((d) => ({ ...d, [`${setId}:w`]: text }));
     clearError(setId);
     const value = text.trim() === '' ? 0 : Number.parseFloat(text.replace(',', '.'));
     if (Number.isFinite(value)) setWorkout(workouts.updateSet(blockId, setId, { weightKg: fromDisplayWeight(value, units) }));
   };
 
-  const editReps = (blockId: string, setId: string, text: string) => {
+  const editReps = (blockId: string, setId: string, typed: string) => {
+    const text = numericText(typed, false);
     setDrafts((d) => ({ ...d, [`${setId}:r`]: text }));
     clearError(setId);
     const value = text.trim() === '' ? 0 : Number.parseInt(text, 10);

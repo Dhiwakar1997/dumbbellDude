@@ -67,6 +67,18 @@ describe('ActiveWorkoutScreen', () => {
     expect(screen.getByLabelText('Set 1 reps')).not.toHaveAttribute('aria-invalid');
   });
 
+  it('keeps the set fields to numbers, so what shows is what is saved', () => {
+    const { services } = setup();
+    fireEvent.change(screen.getByLabelText('Set 1 weight'), { target: { value: '6o' } });
+    expect(screen.getByLabelText('Set 1 weight')).toHaveValue('6');
+    fireEvent.change(screen.getByLabelText('Set 1 weight'), { target: { value: '62,5kg' } });
+    expect(screen.getByLabelText('Set 1 weight')).toHaveValue('62,5');
+    fireEvent.change(screen.getByLabelText('Set 1 reps'), { target: { value: '1o' } });
+    expect(screen.getByLabelText('Set 1 reps')).toHaveValue('1');
+    const set = services.workouts.getActive()!.exercises[0]!.sets[0]!;
+    expect([set.weightKg, set.reps]).toEqual([62.5, 1]);
+  });
+
   it('ticks a valid set, marks it done and opens the rest timer', () => {
     vi.useFakeTimers();
     const { services } = setup();
