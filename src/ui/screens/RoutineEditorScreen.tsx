@@ -117,7 +117,7 @@ export function RoutineEditorScreen(): JSX.Element {
         <TextField
           label="Routine name"
           value={draft.name}
-          placeholder="Push Day"
+          placeholder="e.g. Push Day"
           error={nameError}
           onChange={(v) => {
             setDraft((d) => ({ ...d, name: v }));

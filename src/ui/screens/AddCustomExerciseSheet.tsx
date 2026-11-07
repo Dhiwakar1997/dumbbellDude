@@ -53,7 +53,7 @@ export function AddCustomExerciseSheet(props: {
       <TextField
         label="Name"
         value={name}
-        placeholder="Landmine Press"
+        placeholder="e.g. Landmine Press"
         error={error}
         onChange={(v) => {
           setName(v);
