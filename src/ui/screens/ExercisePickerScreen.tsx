@@ -11,6 +11,7 @@ import { EmptyState } from '../components/EmptyState';
 import { ExerciseRow } from '../components/ExerciseRow';
 import { SearchField } from '../components/SearchField';
 import { StickyFooter } from '../components/StickyFooter';
+import { useBack } from '../useBack';
 import type { EditorDraft } from './RoutineEditorScreen';
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -31,6 +32,8 @@ export function ExercisePickerScreen(): JSX.Element {
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState('all');
   const [selected, setSelected] = useState<string[]>([]);
+  // The workout picker steps back to the workout it was opened from, so no extra /workout entry is left in history.
+  const backToWorkout = useBack('/workout');
 
   const active = forRoutine ? null : workouts.getActive();
   if (!forRoutine && !active) return <Navigate to="/start" replace />;
@@ -50,12 +53,12 @@ export function ExercisePickerScreen(): JSX.Element {
       navigate(`/routines/${routineId}`, { replace: true, state: { draft: { ...base, rows } } });
     } else {
       workouts.addExercises(selected);
-      navigate('/workout', { replace: true });
+      backToWorkout();
     }
   };
 
   const back = () =>
-    forRoutine ? navigate(`/routines/${routineId}`, { replace: true, state: { draft } }) : navigate('/workout', { replace: true });
+    forRoutine ? navigate(`/routines/${routineId}`, { replace: true, state: { draft } }) : backToWorkout();
 
   const n = selected.length;
   return (

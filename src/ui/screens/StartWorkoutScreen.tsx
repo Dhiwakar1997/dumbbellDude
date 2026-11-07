@@ -23,7 +23,8 @@ export function StartWorkoutScreen(): JSX.Element {
   const run = (start: () => void) => {
     try {
       start();
-      navigate('/workout');
+      // Replace Start: once the workout runs, Back should not lead to Start again (e.g. after finishing).
+      navigate('/workout', { replace: true });
     } catch (e) {
       if (e instanceof ValidationError) setError(e.message);
       else throw e;

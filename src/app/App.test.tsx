@@ -52,6 +52,23 @@ describe('App routes (smoke, real LocalStorage adapters on in-memory storage)', 
     expect(screen.getByRole('region', { name: 'Streak' })).toHaveTextContent('1 day streak');
   });
 
+  it('goes back to Home, not to Start workout, from the summary of a just-finished workout', () => {
+    renderApp('/');
+    fireEvent.click(screen.getByRole('button', { name: 'Start your first workout' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Start empty workout' }));
+    fireEvent.click(screen.getByRole('button', { name: '+ Add exercise' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Bench Press/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add 1 exercise' }));
+    fireEvent.change(screen.getByLabelText('Set 1 weight'), { target: { value: '60' } });
+    fireEvent.change(screen.getByLabelText('Set 1 reps'), { target: { value: '8' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Mark set 1 done' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Finish workout' }));
+    fireEvent.click(within(screen.getByRole('dialog', { name: 'Finish workout?' })).getByRole('button', { name: 'Finish' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+    expect(screen.queryByRole('button', { name: 'Start empty workout' })).not.toBeInTheDocument();
+    expect(screen.getByText('Last workout')).toBeInTheDocument();
+  });
+
   it('library: filter by muscle group and add a custom exercise', () => {
     renderApp('/library');
     fireEvent.click(screen.getByRole('button', { name: 'Core' }));
