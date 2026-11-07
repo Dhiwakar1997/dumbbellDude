@@ -19,9 +19,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 .appheader-action { display: flex; align-items: center; min-height: var(--vd-tap); padding: 0 var(--vd-space-2); color: var(--vd-accent); font-size: var(--vd-text); font-weight: 700; white-space: nowrap; }
 
 /* C-7WBSGTY0J4 StatTile + StatRow (C-H00R71NPHW / C-KZ1JW6QA0B) */
-.statrow { display: flex; gap: var(--vd-space-3); padding: var(--vd-space-2) var(--vd-space-4); }
+.statrow { display: flex; flex-wrap: wrap; gap: var(--vd-space-3); padding: var(--vd-space-2) var(--vd-space-4); }
 .statrow.is-three { gap: var(--vd-space-2); }
-.stattile { flex: 1 1 0; min-width: 0; padding: var(--vd-space-4); background: var(--vd-surface); border: 1px solid var(--vd-border); border-radius: var(--vd-radius); font-family: var(--vd-font); }
+.stattile { flex: 1 1 0; min-width: min-content; padding: var(--vd-space-4); background: var(--vd-surface); border: 1px solid var(--vd-border); border-radius: var(--vd-radius); font-family: var(--vd-font); }
 .stattile-label { margin: 0; color: var(--vd-muted); font-size: var(--vd-text-small); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
 .stattile-value { margin: var(--vd-space-2) 0 0; display: flex; align-items: baseline; gap: var(--vd-space-1); flex-wrap: wrap; color: var(--vd-foreground); font-size: var(--vd-text-title); font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .stattile-unit { color: var(--vd-muted); font-size: var(--vd-text-small); font-weight: 600; }
