@@ -51,6 +51,24 @@ describe('RoutineEditorScreen', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('/routines');
   });
 
+  it('keeps focus on the moved row so it can be moved again from the keyboard', () => {
+    const { services } = makeTestServices();
+    const r = services.routines.save({
+      name: 'Push',
+      exercises: [
+        { exerciseId: 'seed-bench-press', targetSets: 3, targetReps: 8 },
+        { exerciseId: 'seed-dips', targetSets: 3, targetReps: 10 },
+        { exerciseId: 'seed-deadlift', targetSets: 3, targetReps: 5 },
+      ],
+    });
+    renderAt(services, routes, `/routines/${r.id}`);
+    fireEvent.click(screen.getByRole('button', { name: 'Move Bench Press down' }));
+    expect(screen.getByRole('button', { name: 'Move Bench Press down' })).toHaveFocus();
+    fireEvent.click(screen.getByRole('button', { name: 'Move Bench Press down' }));
+    // now last: its down arrow is disabled, so focus moves to its up arrow
+    expect(screen.getByRole('button', { name: 'Move Bench Press up' })).toHaveFocus();
+  });
+
   it('flags an invalid target on its row', () => {
     const { services } = makeTestServices();
     const r = services.routines.save({ name: 'Legs', exercises: [{ exerciseId: 'seed-back-squat', targetSets: 3, targetReps: 5 }] });

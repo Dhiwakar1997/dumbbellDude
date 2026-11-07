@@ -1,5 +1,5 @@
 // trussel: T-45W0B435KE@1
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useServices } from '../../app/ServicesContext';
 import { ValidationError } from '../../domain/model';
@@ -43,6 +43,18 @@ export function RoutineEditorScreen(): JSX.Element {
   const [nameError, setNameError] = useState<string | null>(null);
   const [rowErrors, setRowErrors] = useState<Record<number, string>>({});
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [moved, setMoved] = useState<{ index: number; direction: 'up' | 'down' } | null>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  // Reordering re-renders the rows; keep focus on the moved row's arrow (or its other arrow at either end)
+  // so a keyboard user can press it again.
+  useEffect(() => {
+    if (!moved) return;
+    const row = bodyRef.current?.querySelectorAll('[data-testid="routine-row"]')[moved.index];
+    const [up, down] = [...(row?.querySelectorAll<HTMLButtonElement>('.rexrow-move button') ?? [])];
+    const preferred = moved.direction === 'up' ? up : down;
+    (preferred && !preferred.disabled ? preferred : moved.direction === 'up' ? down : up)?.focus();
+  }, [moved]);
 
   if (!isNew && !existing) {
     return (
@@ -62,6 +74,7 @@ export function RoutineEditorScreen(): JSX.Element {
     const [item] = rows.splice(from, 1);
     if (item) rows.splice(to, 0, item);
     updateRows(rows);
+    setMoved({ index: to, direction: to < from ? 'up' : 'down' });
   };
 
   const save = () => {
@@ -91,7 +104,7 @@ export function RoutineEditorScreen(): JSX.Element {
         title={draft.name.trim() || 'New routine'}
         action={{ label: 'Cancel', onClick: () => navigate('/routines') }}
       />
-      <div className="screen-body">
+      <div className="screen-body" ref={bodyRef}>
         <TextField
           label="Routine name"
           value={draft.name}
